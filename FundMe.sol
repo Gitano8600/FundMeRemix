@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.24;
 
 import {PriceConverter} from "./PriceConverter.sol";
 
@@ -28,23 +28,25 @@ contract FundMe {
     }
 
 
-    function withdraw() public {
+    modifier onlyOwner() {
+        if(msg.sender != i_owner) revert NotOwner();
+        _;
+    }
 
-        for(uint256 funderIndex = 0; funderIndex < funders.length; funderIndex = funderIndex++){
+
+    function withdraw() public onlyOwner {
+
+        for(uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++){
             address funder = funders[funderIndex];
             addressToAmountFunded[funder] = 0;
         }
         funders = new address[](0);
         (bool callSuccess,) = payable(msg.sender).call{value: address(this).balance}("");
         require(callSuccess, "Call failed");
-
     }
 
 
-    modifier onlyOwner() {
-        if(msg.sender != i_owner) revert NotOwner();
-        _;
-    }
+
 
 
     receive() external payable {
