@@ -6,14 +6,16 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interf
 
 library PriceConverter {
 
+
     function getPrice() internal view returns(uint256) {
-    // Address 0xfEefF7c3fB57d18C5C6Cdd71e45D2D0b4F9377bF
+    // Address 0xfEefF7c3fB57d18C5C6Cdd71e45D2D0b4F9377bF for Sepolia ZkSync
     // ABI
     AggregatorV3Interface priceFeed = AggregatorV3Interface(0xfEefF7c3fB57d18C5C6Cdd71e45D2D0b4F9377bF);
     (,int256 price,,,) = priceFeed.latestRoundData();
     //Price of ETH in terms of USD
     return uint256(price * 1e10);
     }
+
 
     function getConversionRate(uint256 ethAmount) internal view returns (uint256) {
         uint256 ethPrice = getPrice();
